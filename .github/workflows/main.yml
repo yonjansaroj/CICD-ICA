@@ -1,9 +1,41 @@
-            - name: Setup Node.js environment
-  uses: actions/setup-node@v3.9.1
-  with:
-    always-auth: false
-    node-version: '18'                # Use Node.js v18
-    architecture: 'x64'               # Default architecture
-    check-latest: true                # Check for the latest patch version
-    cache: 'npm'                      # Enable caching for npm
-    cache-dependency-path: '**/package-lock.json'  # Cache dependencies if added later
+name: Setup Node.js environment
+on:
+  push:
+    branches:
+      - main          # Trigger on push to the main branch
+  pull_request:
+    branches:
+      - main          # Trigger on pull request targeting the main branch
+  workflow_dispatch:   # Allows manual triggering of the workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest   # Runs the workflow on Ubuntu
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2   # Checkout the repository's code
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3  # Set up Node.js
+        with:
+          node-version: '16'  # Set Node.js version to 16 (modify if needed)
+
+      - name: Cache node modules
+        uses: actions/cache@v2   # Cache dependencies to speed up builds
+        with:
+          path: ~/.npm          # Cache npm's global cache
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}  # Cache based on package-lock.json
+          restore-keys: |
+            ${{ runner.os }}-node-modules-  # Restore from any available cache
+
+      - name: Install dependencies
+        run: npm install  # Install project dependencies
+
+      - name: Run tests
+        run: npm test     # Run tests using npm (ensure tests are defined in package.json)
+
+      - name: Display Node.js and npm versions
+        run: |
+          node -v         # Output Node.js version
+          npm -v          # Output npm version
