@@ -1,4 +1,5 @@
-name: Setup Node.js environment
+name: Node.js CI
+
 on:
   push:
     branches:
@@ -22,7 +23,7 @@ jobs:
           node-version: '16'  # Set Node.js version to 16 (modify if needed)
 
       - name: Cache node modules
-        uses: actions/cache@v2   # Cache dependencies to speed up builds
+        uses: actions/cache@v3   # Updated to use actions/cache@v3
         with:
           path: ~/.npm          # Cache npm's global cache
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}  # Cache based on package-lock.json
