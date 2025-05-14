@@ -1,13 +1,12 @@
 {
   "name": "CICD-ICA",
   "version": "1.0.0",
-  "description": "A brief description of your project",
+  "description": "hely ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "test": "echo \"No tests yet. Skipping.\""
   },
-  "author": "Saroj Tamang Yonjan",
+  "author": " Saroj ",
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {}
