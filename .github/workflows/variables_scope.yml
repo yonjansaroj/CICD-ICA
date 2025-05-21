@@ -1,0 +1,32 @@
+name: Workflow Variable Scopes
+
+on: 
+  push:
+    branches:
+      - main
+
+env:
+  # Workflow-level variable
+  MY_WORKFLOW_VARIABLE: "This is a workflow-level variable"
+
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+
+    env:
+      # Job-level variable
+      MY_JOB_VARIABLE: "This is a job-level variable"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Display workflow, job, and step variables
+        run: |
+          echo "Workflow Variable: $MY_WORKFLOW_VARIABLE"
+          echo "Job Variable: $MY_JOB_VARIABLE"
+          echo "Step Variable: $MY_STEP_VARIABLE"
+        env:
+          # Step-level variable
+          MY_STEP_VARIABLE: "This is a step-level variable"
+
