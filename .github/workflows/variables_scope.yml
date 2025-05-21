@@ -27,34 +27,8 @@ jobs:
           echo "Job Variable: $MY_JOB_VARIABLE"
           echo "Step Variable: $MY_STEP_VARIABLE"
         env:
+          # Step-level variable
           MY_STEP_VARIABLE: "This is a step-level variable"
-
-      - name: Install gnuplot
-        run: sudo apt-get install -y gnuplot
-
-      - name: Create simple chart
-        run: |
-          echo "0 0" > data.txt
-          echo "1 1" >> data.txt
-          echo "2 4" >> data.txt
-          echo "3 9" >> data.txt
-          echo "4 16" >> data.txt
-          echo "5 25" >> data.txt
-
-          gnuplot -e "
-            set terminal png size 600,400;
-            set output 'chart.png';
-            set title 'Sample Chart';
-            set xlabel 'X';
-            set ylabel 'Y';
-            plot 'data.txt' using 1:2 with lines title 'Y = X^2';
-          "
-
-      - name: Upload chart artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: sample-chart
-          path: chart.png
 
           
 
