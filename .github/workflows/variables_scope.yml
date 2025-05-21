@@ -1,4 +1,4 @@
-name: Workflow Variable Scope
+name: Workflow Variable Scopes
 
 on: 
   push:
