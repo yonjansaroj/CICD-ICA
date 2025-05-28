@@ -2,97 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>API Demo: Cat Facts and News</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>News API Demo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 2rem;
     }
-
-    h1, h2 {
-      color: #222;
-    }
-
-    section {
-      margin-bottom: 2rem;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 1rem;
-    }
-
-    button {
+    input, button {
+      padding: 0.5rem;
       margin-top: 0.5rem;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
+      font-size: 1rem;
     }
-
     ul {
+      margin-top: 1rem;
       padding-left: 1.2rem;
     }
-
     li {
       margin-bottom: 0.5rem;
     }
   </style>
 </head>
 <body>
-  <h1>API Demo: Cat Facts and News Headlines</h1>
 
-  <section>
-    <h2>🐱 Cat Fact</h2>
-    <button onclick="getCatFact()">Get a Random Cat Fact</button>
-    <p id="cat-fact"></p>
-  </section>
+  <h1>Top News Headlines</h1>
 
-  <section>
-    <h2>📰 Top News (NewsAPI)</h2>
-    <input type="text" id="topic" placeholder="Enter topic (e.g., technology)" />
-    <button onclick="getNews()">Get News</button>
-    <ul id="news-list"></ul>
-  </section>
+  <label for="topic">Enter topic (e.g., technology):</label><br/>
+  <input type="text" id="topic" placeholder="technology" />
+  <button id="get-news-btn">Get News</button>
+
+  <ul id="news-list"></ul>
 
   <script>
-    // Cat Facts API
-    function getCatFact() {
-      fetch('https://catfact.ninja/fact')
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById('cat-fact').textContent = data.fact;
+    const apiKey = 'REPLACE_WITH_SECRET_KEY';  // This should be replaced during your build process
+
+    const newsList = document.getElementById('news-list');
+    const btn = document.getElementById('get-news-btn');
+    const topicInput = document.getElementById('topic');
+
+    btn.addEventListener('click', () => {
+      const topic = topicInput.value.trim() || 'technology';
+      newsList.innerHTML = '<li>Loading news...</li>';
+
+      fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(topic)}&apiKey=${apiKey}`)
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
         })
-        .catch(error => {
-          console.error('Error fetching cat fact:', error);
-          document.getElementById('cat-fact').textContent = 'Failed to load cat fact.';
-        });
-    }
-
-    // NewsAPI with injected secret key
-    const NEWS_API_KEY = 'REPLACE_WITH_SECRET_KEY';
-
-    function getNews() {
-      const topic = document.getElementById('topic').value || 'technology';
-      const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(topic)}&apiKey=${NEWS_API_KEY}`;
-
-      fetch(url)
-        .then(response => response.json())
         .then(data => {
-          const newsList = document.getElementById('news-list');
-          newsList.innerHTML = '';
-
-          if (data.articles && data.articles.length > 0) {
-            data.articles.slice(0, 5).forEach(article => {
-              const li = document.createElement('li');
-              li.innerHTML = `<a href="${article.url}" target="_blank">${article.title}</a>`;
-              newsList.appendChild(li);
-            });
-          } else {
+          if (!data.articles || data.articles.length === 0) {
             newsList.innerHTML = '<li>No articles found.</li>';
+            return;
           }
+
+          newsList.innerHTML = '';
+          data.articles.slice(0, 5).forEach(article => {
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a>`;
+            newsList.appendChild(li);
+          });
         })
         .catch(error => {
-          console.error('Error fetching news:', error);
-          document.getElementById('news-list').innerHTML = '<li>Failed to load news.</li>';
+          newsList.innerHTML = `<li>Failed to load news: ${error.message}</li>`;
         });
-    }
+    });
   </script>
+
 </body>
 </html>
