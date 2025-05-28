@@ -1,0 +1,32 @@
+name: Build and Deploy Static Site
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Inject API Key from ICA_SECERT
+        run: |
+          sed -i 's/REPLACE_WITH_SECRET_KEY/${{ secrets.ICA_SECERT }}/g' index.html
+
+      # Optional: Upload artifact for preview/debug
+      - name: Upload built site
+        uses: actions/upload-artifact@v3
+        with:
+          name: built-site
+          path: .
+
+      # Optional: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
