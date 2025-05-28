@@ -1,0 +1,15 @@
+name: Hardcoded API Key Example
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Show API Key (Hardcoded)
+        run: |
+          echo "Using API Key: 20902588e6ea4b449b8f471142d6b119"
