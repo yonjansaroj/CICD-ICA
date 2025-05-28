@@ -13,18 +13,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Inject API Key from ICA_SECERT
+      - name: Inject API Key from secret
         run: |
-          sed -i 's/REPLACE_WITH_SECRET_KEY/${{ secrets.ICA_SECERT }}/g' index.html
+          sed -i "s/REPLACE_WITH_SECRET_KEY/${{ secrets.ICA_SECRET }}/g" index.html
 
-      # Optional: Upload artifact for preview/debug
-      - name: Upload built site
-        uses: actions/upload-artifact@v3
-        with:
-          name: built-site
-          path: .
+      # Optional: Upload built site artifact (commented out due to download error)
+      # - name: Upload built site artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: built-site
+      #     path: .
 
-      # Optional: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
