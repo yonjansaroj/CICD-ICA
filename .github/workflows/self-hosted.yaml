@@ -1,0 +1,12 @@
+name: macOS Self-Hosted Runner Test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Print macOS info
+        run: sw_vers
